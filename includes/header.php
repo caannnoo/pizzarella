@@ -1,44 +1,57 @@
-<?php
-if (session_status() === PHP_SESSION_NONE)
-    session_start();
-?>
-
 <header class="header">
-    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <a href="/sites/orders.php">
-            <img class="logo" alt="Pizzarella Logo" src="/img/logoheader.png" />
-        </a>
-    <?php else: ?>
-        <a href="/index.php">
-            <img class="logo" alt="Pizzarella Logo" src="/img/logoheader.png" />
-        </a>
-    <?php endif; ?>
+    <a id="logo-link" href="index.html">
+        <img class="logo" alt="Pizzarella Logo" src="img/logoheader.png" />
+    </a>
 
     <nav class="nav">
-        <ul class="nav-list">
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <!-- Admin-Menü -->
-                <li><a class="nav-link" href="/sites/orders.php">Alle Bestellungen</a></li>
-                <li><a class="nav-link" href="/sites/account_admin.php">Mein Konto</a></li>
-                <li><span class="greeting">Hallo, <?= htmlspecialchars($_SESSION['firstName']); ?> 👋</span></li>
-                <li><a class="nav-link" href="/sites/logout.php">Logout</a></li>
-            <?php else: ?>
-                <!-- Normaler Kunde/Gast -->
-                <li><a class="nav-link" href="/index.php">Startseite</a></li>
-                <li><a class="nav-link" href="/sites/order.php">Bestellen</a></li>
-                <?php if (isset($_SESSION['firstName'])): ?>
-                    <li><a class="nav-link" href="/sites/account.php">Mein Konto</a></li>
-                    <li><span class="greeting">Hallo, <?= htmlspecialchars($_SESSION['firstName']); ?> 👋</span></li>
-                    <li><a class="nav-link" href="/sites/logout.php">Logout</a></li>
-                <?php else: ?>
-                    <li><a class="nav-link" href="/sites/login.php">Registrieren/Anmelden</a></li>
-                <?php endif; ?>
-                <div class="cart-icon">
-                    <a href="/sites/cart.php">🛒
-                        <span class="cart-count"><?= $_SESSION['cart_count'] ?? 0 ?></span>
-                    </a>
-                </div>
-            <?php endif; ?>
+        <ul class="nav-list" id="nav-list">
+            <!-- JS füllt hier dynamisch die Links -->
         </ul>
     </nav>
 </header>
+
+<script>
+    // Beispiel: "role" und "firstName" aus localStorage / SessionStorage simulieren
+    // In echtem statischen Projekt ersetzt du PHP-Session durch JS-Speicher oder API
+    const role = localStorage.getItem('role'); // "admin" oder null
+    const firstName = localStorage.getItem('firstName'); // Name des Users
+    const cartCount = localStorage.getItem('cart_count') || 0;
+
+    const navList = document.getElementById('nav-list');
+    const logoLink = document.getElementById('logo-link');
+
+    if (role === 'admin') {
+        logoLink.href = 'sites/orders.html';
+        navList.innerHTML = `
+            <li><a class="nav-link" href="sites/orders.html">Alle Bestellungen</a></li>
+            <li><a class="nav-link" href="sites/account_admin.html">Mein Konto</a></li>
+            <li><span class="greeting">Hallo, ${firstName} 👋</span></li>
+            <li><a class="nav-link" href="sites/logout.html">Logout</a></li>
+        `;
+    } else {
+        logoLink.href = 'index.html';
+        if (firstName) {
+            navList.innerHTML = `
+                <li><a class="nav-link" href="index.html">Startseite</a></li>
+                <li><a class="nav-link" href="sites/order.html">Bestellen</a></li>
+                <li><a class="nav-link" href="sites/account.html">Mein Konto</a></li>
+                <li><span class="greeting">Hallo, ${firstName} 👋</span></li>
+                <li><a class="nav-link" href="sites/logout.html">Logout</a></li>
+            `;
+        } else {
+            navList.innerHTML = `
+                <li><a class="nav-link" href="index.html">Startseite</a></li>
+                <li><a class="nav-link" href="sites/order.html">Bestellen</a></li>
+                <li><a class="nav-link" href="sites/login.html">Registrieren/Anmelden</a></li>
+            `;
+        }
+        // Warenkorb
+        navList.innerHTML += `
+            <div class="cart-icon">
+                <a href="sites/cart.html">🛒
+                    <span class="cart-count">${cartCount}</span>
+                </a>
+            </div>
+        `;
+    }
+</script>
