@@ -1,0 +1,62 @@
+[
+  {
+    "id": 11,
+    "name": "Oliven",
+    "img": "../img/toppings/olives.png",
+    "price": 0.5
+  },
+  {
+    "id": 12,
+    "name": "Paprika",
+    "img": "../img/toppings/paprika.png",
+    "price": 0.5
+  },
+  {
+    "id": 13,
+    "name": "Zwiebeln",
+    "img": "../img/toppings/onion.png",
+    "price": 0.5
+  },
+  {
+    "id": 14,
+    "name": "Champignons",
+    "img": "../img/toppings/mushroom.png",
+    "price": 0.5
+  },
+  {
+    "id": 15,
+    "name": "Schinken",
+    "img": "../img/toppings/bacon.png",
+    "price": 1.0
+  },
+  {
+    "id": 16,
+    "name": "Salami",
+    "img": "../img/toppings/salami.png",
+    "price": 1.0
+  },
+  {
+    "id": 17,
+    "name": "Thunfisch",
+    "img": "../img/toppings/tuna.png",
+    "price": 1.0
+  },
+  {
+    "id": 18,
+    "name": "Ananas",
+    "img": "../img/toppings/pineapple.png",
+    "price": 0.5
+  },
+  {
+    "id": 19,
+    "name": "Peperoni",
+    "img": "../img/toppings/chili-pepper.png",
+    "price": 0.5
+  },
+  {
+    "id": 20,
+    "name": "Extra Käse",
+    "img": "../img/toppings/cheese.png",
+    "price": 1.0
+  }
+]

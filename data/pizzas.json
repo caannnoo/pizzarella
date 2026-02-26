@@ -1,0 +1,86 @@
+[
+  {
+    "id": 7,
+    "name": "Margherita",
+    "description": "Tomatensoße, Käse",
+    "base_price": 6.0,
+    "img": "../img/pizzas/margherita.png"
+  },
+  {
+    "id": 8,
+    "name": "Salami",
+    "description": "Tomatensoße, Käse, Salami",
+    "base_price": 6.5,
+    "img": "../img/pizzas/salami.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Prosciutto",
+    "description": "Tomatensoße, Käse, Schinken",
+    "base_price": 6.5,
+    "img": "../img/pizzas/prosciutto.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Funghi",
+    "description": "Tomatensoße, Käse, Champignons",
+    "base_price": 6.5,
+    "img": "../img/pizzas/funghi.png"
+  },
+  {
+    "id": 11,
+    "name": "Hawaii",
+    "description": "Tomatensoße, Käse, Schinken, Ananas",
+    "base_price": 7.0,
+    "img": "../img/pizzas/hawaii.png"
+  },
+  {
+    "id": 12,
+    "name": "Tonno",
+    "description": "Tomatensoße, Käse, Thunfisch, Zwiebeln",
+    "base_price": 7.0,
+    "img": "../img/pizzas/tonno.png"
+  },
+  {
+    "id": 13,
+    "name": "Vegetarisch",
+    "description": "Tomatensoße, Käse, Gemüse",
+    "base_price": 7.0,
+    "img": "../img/pizzas/vegetarisch.jpg"
+  },
+  {
+    "id": 14,
+    "name": "Diavolo",
+    "description": "Tomatensoße, Käse, scharfe Salami, Peperoni",
+    "base_price": 7.0,
+    "img": "../img/pizzas/diavolo.png"
+  },
+  {
+    "id": 15,
+    "name": "Quattro-Formaggi",
+    "description": "Mozzarella, Gorgonzola, Parmesan, Emmentaler",
+    "base_price": 7.0,
+    "img": "../img/pizzas/quattro-formaggi.png"
+  },
+  {
+    "id": 16,
+    "name": "Capricciosa",
+    "description": "Käse, Schinken, Artischocken, Champignons, Oliven",
+    "base_price": 7.5,
+    "img": "../img/pizzas/capricciosa.jpg"
+  },
+  {
+    "id": 17,
+    "name": "BBQ-Chicken",
+    "description": "BBQ-Soße, Käse, Hähnchen, Paprika, rote Zwiebeln",
+    "base_price": 8.0,
+    "img": "../img/pizzas/bbq-chicken.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Mediterranea",
+    "description": "Käse, Zucchini, Auberginen, Paprika, Oliven",
+    "base_price": 8.0,
+    "img": "../img/pizzas/mediterranea.jpg"
+  }
+]

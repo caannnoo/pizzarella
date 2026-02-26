@@ -1,0 +1,16 @@
+[
+  {
+    "id": 22,
+    "firstName": "Max",
+    "lastName": "Mustermann",
+    "email": "max@web.de",
+    "role": "guest"
+  },
+  {
+    "id": 23,
+    "firstName": "Lionel",
+    "lastName": "Messi",
+    "email": "lionelmessi@web.de",
+    "role": "admin"
+  }
+]
