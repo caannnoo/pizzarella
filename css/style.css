@@ -67,10 +67,18 @@
   list-style: none;
 }
 
-.cart-icon,
-.cart-icon * {
+.cart-icon .nav-link {
+  background-color: transparent;
+  color: black;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
   font-size: 1.6rem;
-  text-decoration: none;
+}
+
+.cart-icon .cart-count {
+  font-weight: bold;
+  color: #fda61f;
 }
 
 /* FOOTER SECTION */
@@ -770,7 +778,9 @@ a.btn-form-login-admin:hover {
   cursor: pointer;
   font-size: 1.6rem;
   text-align: center;
-  transition: background-color 0.3s, transform 0.2s;
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
   text-transform: uppercase;
 }
 

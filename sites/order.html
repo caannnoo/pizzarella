@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizzen bestellen</title>
+    <link rel="stylesheet" href="../css/general.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <main>
+      <div class="pizza-list" id="pizza-list"></div>
+    </main>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script>
+      fetch("../data/pizzas.json")
+        .then((res) => res.json())
+        .then((data) => console.log("Pizza JSON geladen:", data))
+        .catch((err) =>
+          console.error("Fehler beim Laden der Pizza JSON:", err),
+        );
+      // === Header laden ===
+      fetch("../includes/header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
+          const script = document.createElement("script");
+          script.src = "../includes/header.js";
+          document.body.appendChild(script);
+        });
+
+      // === Footer laden ===
+      fetch("../includes/footer.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("footer").innerHTML = data;
+        });
+
+      // === JSON laden ===
+      const pizzaList = document.getElementById("pizza-list");
+
+      function fetchJSON(url) {
+        return fetch(url).then((res) => res.json());
+      }
+
+      // 🔹 Test, ob die JSON geladen wird
+      fetchJSON("../data/pizzas.json")
+        .then((data) => console.log("Pizza JSON geladen:", data))
+        .catch((err) =>
+          console.error("Fehler beim Laden der Pizza JSON:", err),
+        );
+
+      Promise.all([
+        fetchJSON("../data/pizzas.json"),
+        fetchJSON("../data/sizes.json"),
+        fetchJSON("../data/toppings.json"),
+      ])
+        .then(([pizzas, sizesArr, toppingsArr]) => {
+          console.log("Daten aus JSON:", pizzas, sizesArr, toppingsArr); // 🔹 wichtigste Zeile
+          buildPizzaCards(pizzas, sizesArr, toppingsArr);
+        })
+        .catch((err) => console.error("Fehler beim Laden der JSONs:", err));
+
+      function buildPizzaCards(pizzas, sizesArr, toppingsArr) {
+        pizzas.forEach((pizza) => {
+          // Größen-Optionen
+          let sizeOptions = sizesArr
+            .map((size) => {
+              return `<option value="${size.name}">${size.name} ${size.price > 0 ? "(+€" + size.price.toFixed(2) + ")" : ""}</option>`;
+            })
+            .join("");
+
+          // Toppings-Optionen & Bilder
+          let toppingOptions = toppingsArr
+            .map((t) => {
+              return `<option value="${t.name}">${t.name} (+€${t.price.toFixed(2)})</option>`;
+            })
+            .join("");
+
+          let toppingImages = toppingsArr
+            .map((t) => {
+              return `<img src="${t.img}" alt="${t.name}" width="50">`;
+            })
+            .join("");
+
+          const formId = pizza.name.replace(/\s+/g, "-") + "-form";
+
+          const pizzaHTML = `
+            <div class="pizza-card">
+              <img src="${pizza.img}" alt="${pizza.name}" class="pizza-img-order">
+              <h2>${pizza.name}</h2>
+              <p>${pizza.description}</p>
+              <p>Basispreis: €${pizza.base_price.toFixed(2)}</p>
+
+              <form class="pizza-order-form" id="${formId}">
+                <input type="hidden" name="pizza_name" value="${pizza.name}">
+
+                <label>Größe:</label>
+                <select name="size">${sizeOptions}</select>
+
+                <label>Toppings (mehrere möglich):</label>
+                <select name="toppings[]" multiple size="5">${toppingOptions}</select>
+
+                <div class="topping-images">${toppingImages}</div>
+
+                <label>Sonderwünsche:</label>
+                <textarea name="note" placeholder="Hier Sonderwünsche eintragen..."></textarea>
+
+                <button type="submit">In den Warenkorb</button>
+              </form>
+            </div>
+          `;
+
+          pizzaList.innerHTML += pizzaHTML;
+        });
+      }
+    </script>
+  </body>
+</html>

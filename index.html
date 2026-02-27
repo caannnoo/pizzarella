@@ -3,15 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link rel="icon" href="img/favicon.png" />
     <link rel="stylesheet" href="css/general.css" />
     <link rel="stylesheet" href="css/style.css" />
-
     <title>Pizzarella</title>
   </head>
   <body>
-    <!-- Header wird dynamisch geladen -->
+    <!-- Header-Container -->
     <div id="header"></div>
 
     <main>
@@ -34,19 +32,28 @@
       </section>
     </main>
 
-    <!-- Footer wird dynamisch geladen -->
+    <!-- Footer-Container -->
     <div id="footer"></div>
 
     <script>
-      // Header laden
+      // === HEADER laden ===
       fetch("includes/header.html")
-        .then((response) => response.text())
-        .then((data) => (document.getElementById("header").innerHTML = data));
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
 
-      // Footer laden
+          // Header.js nach dem Einfügen ausführen
+          const script = document.createElement("script");
+          script.src = "includes/header.js";
+          document.body.appendChild(script);
+        });
+
+      // === FOOTER laden ===
       fetch("includes/footer.html")
-        .then((response) => response.text())
-        .then((data) => (document.getElementById("footer").innerHTML = data));
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("footer").innerHTML = data;
+        });
     </script>
   </body>
 </html>

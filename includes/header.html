@@ -1,60 +1,13 @@
 <header class="header">
+  <!-- Logo -->
   <a id="logo-link" href="index.html">
-    <img class="logo" alt="Pizzarella Logo" src="img/logoheader.png" />
+    <img class="logo" alt="Pizzarella Logo" src="../img/logoheader.png" />
   </a>
 
+  <!-- Navigation -->
   <nav class="nav">
     <ul class="nav-list" id="nav-list">
-      <!-- Links werden per JS eingefügt -->
+      <!-- Links werden dynamisch von header.js eingefügt -->
     </ul>
   </nav>
 </header>
-
-<script>
-  // === Dynamische Logik ===
-  // role = "admin" oder null
-  // firstName = Name des eingeloggten Nutzers
-  // cart_count = Anzahl Produkte im Warenkorb
-  const role = localStorage.getItem("role");
-  const firstName = localStorage.getItem("firstName");
-  const cartCount = localStorage.getItem("cart_count") || 0;
-
-  const navList = document.getElementById("nav-list");
-  const logoLink = document.getElementById("logo-link");
-
-  if (role === "admin") {
-    logoLink.href = "sites/orders.html";
-    navList.innerHTML = `
-            <li><a class="nav-link" href="sites/orders.html">Alle Bestellungen</a></li>
-            <li><a class="nav-link" href="sites/account_admin.html">Mein Konto</a></li>
-            <li><span class="greeting">Hallo, ${firstName} 👋</span></li>
-            <li><a class="nav-link" href="sites/logout.html">Logout</a></li>
-        `;
-  } else {
-    logoLink.href = "index.html";
-    if (firstName) {
-      navList.innerHTML = `
-                <li><a class="nav-link" href="index.html">Startseite</a></li>
-                <li><a class="nav-link" href="sites/order.html">Bestellen</a></li>
-                <li><a class="nav-link" href="sites/account.html">Mein Konto</a></li>
-                <li><span class="greeting">Hallo, ${firstName} 👋</span></li>
-                <li><a class="nav-link" href="sites/logout.html">Logout</a></li>
-            `;
-    } else {
-      navList.innerHTML = `
-                <li><a class="nav-link" href="index.html">Startseite</a></li>
-                <li><a class="nav-link" href="sites/order.html">Bestellen</a></li>
-                <li><a class="nav-link" href="sites/login.html">Registrieren/Anmelden</a></li>
-            `;
-    }
-
-    // Warenkorb-Icon
-    navList.innerHTML += `
-            <div class="cart-icon">
-                <a href="sites/cart.html">🛒
-                    <span class="cart-count">${cartCount}</span>
-                </a>
-            </div>
-        `;
-  }
-</script>
