@@ -39,7 +39,7 @@ function initHeader() {
 
     navHTML += `
       <li class="cart-icon">
-        <a class="nav-link" href="sites/cart.html">
+        <a class="nav-link" href="../sites/cart.html">
           🛒 <span class="cart-count">${cartCount}</span>
         </a>
       </li>

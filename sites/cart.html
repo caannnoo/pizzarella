@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warenkorb</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/general.css" />
+  </head>
+  <body>
+    <div id="header"></div>
+
+    <div class="cart-container">
+      <h1>Dein Warenkorb</h1>
+      <div class="empty-cart">Dein Warenkorb ist leer.</div>
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Bild</th>
+            <th>Pizza</th>
+            <th>Größe</th>
+            <th>Toppings</th>
+            <th>Sonderwünsche</th>
+            <th>Menge</th>
+            <th>Preis</th>
+            <th>Löschen</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" style="text-align: right; font-weight: bold">
+              Gesamt:
+            </td>
+            <td colspan="2" id="total-price">€0,00</td>
+          </tr>
+        </tfoot>
+      </table>
+      <a href="review_order.html" class="checkout-btn"
+        >Weiter zur Bestellübersicht</a
+      >
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+      // Header & Footer
+      fetch("../includes/header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
+          const script = document.createElement("script");
+          script.src = "../includes/header.js";
+          document.body.appendChild(script);
+        });
+      fetch("../includes/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+
+      // Warenkorb aus LocalStorage laden
+      function renderCart() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const tbody = document.querySelector(".cart-table tbody");
+        const emptyDiv = document.querySelector(".empty-cart");
+        tbody.innerHTML = "";
+        if (cart.length === 0) {
+          emptyDiv.style.display = "block";
+          document.getElementById("total-price").textContent = "€0,00";
+          return;
+        }
+        emptyDiv.style.display = "none";
+
+        let total = 0;
+        cart.forEach((item, index) => {
+          const toppings = item.toppings.join(", ");
+          const lineTotal = item.quantity * (item.unit_price || 0);
+          total += lineTotal;
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><img src="../img/pizzas/${item.img}" width="80" alt="${item.pizza_name}"></td>
+            <td>${item.pizza_name}</td>
+            <td>${item.size_name}</td>
+            <td>${toppings}</td>
+            <td>${item.note}</td>
+            <td>${item.quantity}</td>
+            <td>€${lineTotal.toFixed(2)}</td>
+            <td><button data-index="${index}" class="remove-btn">❌</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("total-price").textContent =
+          `€${total.toFixed(2)}`;
+
+        document.querySelectorAll(".remove-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const idx = btn.dataset.index;
+            cart.splice(idx, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+          });
+        });
+      }
+
+      renderCart();
+    </script>
+  </body>
+</html>
