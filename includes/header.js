@@ -1,7 +1,10 @@
 function initHeader() {
   const role = localStorage.getItem("role");
   const firstName = localStorage.getItem("firstName");
-  const cartCount = localStorage.getItem("cart_count") || 0;
+
+  // Warenkorb laden
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const navList = document.getElementById("nav-list");
   const logoLink = document.getElementById("logo-link");
@@ -10,6 +13,7 @@ function initHeader() {
 
   let navHTML = "";
 
+  // === ADMIN ===
   if (role === "admin") {
     logoLink.href = "sites/orders.html";
     navHTML += `
@@ -18,7 +22,9 @@ function initHeader() {
       <li><span class="greeting">Hallo, ${firstName || "Admin"} 👋</span></li>
       <li><a class="nav-link" href="sites/logout.html">Logout</a></li>
     `;
-  } else {
+  }
+  // === USER ===
+  else {
     logoLink.href = "index.html";
     navHTML += `
       <li><a class="nav-link" href="index.html">Startseite</a></li>
@@ -37,6 +43,7 @@ function initHeader() {
       `;
     }
 
+    // Warenkorb Icon
     navHTML += `
       <li class="cart-icon">
         <a class="nav-link" href="../sites/cart.html">
@@ -49,5 +56,17 @@ function initHeader() {
   navList.innerHTML = navHTML;
 }
 
+// 🔥 Diese Funktion sorgt dafür, dass der Counter sofort aktualisiert wird
+window.updateCartCounter = function () {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let total = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const counter = document.querySelector(".cart-count");
+  if (counter) {
+    counter.textContent = total;
+  }
+};
+
 // direkt aufrufen, sobald header.js geladen wird
 initHeader();
+updateCartCounter();
