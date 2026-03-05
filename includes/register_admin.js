@@ -1,15 +1,11 @@
-const form = document.getElementById("register-form");
+const form = document.getElementById("register-admin-form");
 const msg = document.getElementById("message");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  // Formulardaten auslesen
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
-  const street = document.getElementById("street").value.trim();
-  const zip = document.getElementById("zip").value.trim();
-  const city = document.getElementById("city").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const passwordRepeat = document.getElementById("passwordRepeat").value;
@@ -39,23 +35,20 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  // Neuen Benutzer speichern
+  // Neuen Admin-Benutzer speichern
   const newUser = {
     firstName,
     lastName,
-    street,
-    zip,
-    city,
     email,
     password,
-    role: "guest",
+    role: "admin",
   };
 
   users.push(newUser);
   localStorage.setItem("users", JSON.stringify(users));
 
   // Feedback
-  msg.textContent = "Kundenkonto erfolgreich erstellt!";
+  msg.textContent = "Admin-Konto erfolgreich erstellt!";
   msg.className = "message success";
   form.reset();
 });

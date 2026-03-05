@@ -9,7 +9,12 @@ const PORT = 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public"))); // statische Dateien
+
+// Statische Ordner freigeben
+app.use("/css", express.static(path.join(__dirname, "css"))); // CSS
+app.use("/img", express.static(path.join(__dirname, "img"))); // Bilder
+app.use(express.static(path.join(__dirname, "sites"))); // HTML/JS Dateien
+app.use("/includes", express.static(path.join(__dirname, "includes"))); // Header/Footer/JS
 
 // Registrierung: POST /register
 app.post("/register", (req, res) => {
@@ -34,5 +39,5 @@ app.post("/register", (req, res) => {
 });
 
 app.listen(PORT, () =>
-  console.log(`Server läuft auf http://localhost:${PORT}`),
+  console.log(`Server läuft auf http://127.0.0.1:${PORT}`),
 );

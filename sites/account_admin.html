@@ -1,56 +1,41 @@
-<?php
-session_start();
-include '../includes/db_connect.php';
-
-$userId = $_SESSION['user_id'];
-
-// Aktuelle Daten laden
-$stmt = $conn->prepare("SELECT firstName, lastName, email, street, city, zip FROM users WHERE id = ?");
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Mein Konto</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/general.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin-Konto</title>
+    <link rel="stylesheet" href="../css/general.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="header"></div>
 
-<?php include '../includes/header.php'; ?>
+    <main>
+      <div class="account-container">
+        <h1>Admin-Konto</h1>
 
-<div class="account-container">
-    <h1>Mein Konto</h1>
+        <p id="account-message" class="account-message"></p>
 
-    <?php if (isset($_SESSION['account_message'])): ?>
-    <div class="account-message">
-        <?= htmlspecialchars($_SESSION['account_message']) ?>
-    </div>
-        <?php unset($_SESSION['account_message']); ?>
-    <?php endif; ?>
+        <h2>Passwort ändern</h2>
+        <form class="account-form-pw" id="password-form">
+          <label>Altes Passwort:</label>
+          <input type="password" id="oldPassword" required />
 
-    <h2>Passwort ändern</h2>
-    <form class="account-form-pw" action="update_password.php" method="post">
-      <label>Altes Passwort:</label>
-      <input type="password" name="old_password" required>
+          <label>Neues Passwort:</label>
+          <input type="password" id="newPassword" required />
 
-      <label>Neues Passwort:</label>
-      <input type="password" name="new_password" required>
+          <label>Neues Passwort wiederholen:</label>
+          <input type="password" id="confirmPassword" required />
 
-      <label>Neues Passwort wiederholen:</label>
-      <input type="password" name="confirm_password" required>
+          <button type="submit">Passwort ändern</button>
+        </form>
+      </div>
+    </main>
 
-      <button type="submit">Passwort ändern</button>
-    </form>
+    <!-- Footer -->
+    <div id="footer"></div>
 
-</div>
-
-<?php include '../includes/footer.php'; ?>
-
-</body>
+    <script src="../includes/account_admin.js"></script>
+  </body>
 </html>

@@ -1,89 +1,104 @@
-<?php
-session_start();
-include '../includes/db_connect.php';
-
-// Nur Admins dürfen auf diese Seite
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php");
-    exit();
-}
-
-// Alle Bestellungen der Gäste abrufen
-$sql = "SELECT o.id as order_id, o.user_id, o.total_price,
-               u.firstName, u.lastName, u.email
-        FROM orders o
-        JOIN users u ON o.user_id = u.id
-        ORDER BY o.id DESC";
-
-$ordersResult = $conn->query($sql);
-?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alle Bestellungen</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/general.css">
-</head>
-<body>
-<?php include '../includes/header.php'; ?>
+    <link rel="stylesheet" href="../css/general.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="header"></div>
 
-<div class="admin-orders-container">
-    <h1>Alle Bestellungen</h1>
+    <main>
+      <div class="admin-orders-container">
+        <h1>Alle Bestellungen</h1>
+        <div id="orders-list"></div>
+      </div>
+    </main>
 
-    <?php if ($ordersResult && $ordersResult->num_rows > 0): ?>
-        <?php while($order = $ordersResult->fetch_assoc()): ?>
-            <div class="order-block">
-                <h2>Bestellung #<?= $order['order_id'] ?></h2>
-                <p><strong>Kunde:</strong> <?= htmlspecialchars($order['firstName'] . ' ' . $order['lastName']) ?></p>
-                <p><strong>E-Mail:</strong> <?= htmlspecialchars($order['email']) ?></p>
-                <p><strong>Gesamtpreis:</strong> <?= number_format($order['total_price'], 2) ?> €</p>
+    <!-- Footer -->
+    <div id="footer"></div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pizza</th>
-                            <th>Größe</th>
-                            <th>Anmerkung</th>
-                            <th>Menge</th>
-                            <th>Preis</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        // Alle Items der Bestellung abrufen
-                        $stmt = $conn->prepare("SELECT oi.quantity, oi.price, oi.note, p.name as pizza_name, s.name as size_name
-                                                FROM order_items oi
-                                                JOIN pizzas p ON oi.pizza_id = p.id
-                                                JOIN sizes s ON oi.size_id = s.id
-                                                WHERE oi.order_id = ?");
-                        $stmt->bind_param("i", $order['order_id']);
-                        $stmt->execute();
-                        $itemsResult = $stmt->get_result();
+    <script>
+      // === Header & Footer laden ===
+      fetch("../includes/header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
+          const script = document.createElement("script");
+          script.src = "../includes/header.js";
+          document.body.appendChild(script);
+        });
 
-                        while ($item = $itemsResult->fetch_assoc()):
-                        ?>
-                            <tr>
-                                <td><?= htmlspecialchars($item['pizza_name']) ?></td>
-                                <td><?= htmlspecialchars($item['size_name']) ?></td>
-                                <td><?= htmlspecialchars($item['note']) ?></td>
-                                <td><?= $item['quantity'] ?></td>
-                                <td><?= number_format($item['price'], 2) ?> €</td>
-                            </tr>
-                        <?php endwhile; 
-                        $stmt->close();
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p>Keine Bestellungen vorhanden.</p>
-    <?php endif; ?>
-</div>
+      fetch("../includes/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
 
-<?php include '../includes/footer.php'; ?>
-</body>
+      // === Prüfen ob Admin angemeldet ist ===
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser || currentUser.role !== "admin") {
+        alert("Nur Admins dürfen auf diese Seite!");
+        window.location.href = "../index.html";
+      }
+
+      // === Bestellungen aus LocalStorage laden ===
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+      const ordersList = document.getElementById("orders-list");
+
+      if (orders.length === 0) {
+        ordersList.innerHTML = "<p>Keine Bestellungen vorhanden.</p>";
+      } else {
+        orders.reverse().forEach((order, index) => {
+          const user = users.find((u) => u.email === order.userEmail) || {
+            firstName: "Unbekannt",
+            lastName: "",
+            email: order.userEmail,
+          };
+
+          let itemsHTML = order.items
+            .map(
+              (item) => `
+        <tr>
+          <td>${item.pizza_name}</td>
+          <td>${item.size_name}</td>
+          <td>${item.note}</td>
+          <td>${item.quantity}</td>
+          <td>${item.unit_price.toFixed(2)} €</td>
+        </tr>
+      `,
+            )
+            .join("");
+
+          const orderHTML = `
+        <div class="order-block">
+          <h2>Bestellung #${index + 1}</h2>
+          <p><strong>Kunde:</strong> ${user.firstName} ${user.lastName}</p>
+          <p><strong>E-Mail:</strong> ${user.email}</p>
+          <p><strong>Gesamtpreis:</strong> ${order.items.reduce((sum, i) => sum + i.unit_price * i.quantity, 0).toFixed(2)} €</p>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Pizza</th>
+                <th>Größe</th>
+                <th>Anmerkung</th>
+                <th>Menge</th>
+                <th>Preis</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHTML}
+            </tbody>
+          </table>
+        </div>
+      `;
+          ordersList.innerHTML += orderHTML;
+        });
+      }
+    </script>
+  </body>
 </html>

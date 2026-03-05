@@ -12,44 +12,14 @@ fetch("../includes/footer.html")
   .then((res) => res.text())
   .then((data) => (document.getElementById("footer").innerHTML = data));
 
-// Prüfen ob eingeloggt
+// Prüfen ob Admin
 let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser) {
-  alert("Bitte zuerst einloggen!");
-  window.location.href = "login.html";
+if (!currentUser || currentUser.role !== "admin") {
+  alert("Nur Admins dürfen auf diese Seite!");
+  window.location.href = "../index.html";
 }
 
 const msg = document.getElementById("account-message");
-
-// Formularwerte laden
-document.getElementById("firstName").value = currentUser.firstName || "";
-document.getElementById("lastName").value = currentUser.lastName || "";
-document.getElementById("email").value = currentUser.email || "";
-document.getElementById("street").value = currentUser.street || "";
-document.getElementById("city").value = currentUser.city || "";
-document.getElementById("zip").value = currentUser.zip || "";
-
-// Daten speichern
-const form = document.getElementById("account-form");
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  currentUser.firstName = document.getElementById("firstName").value.trim();
-  currentUser.lastName = document.getElementById("lastName").value.trim();
-  currentUser.email = document.getElementById("email").value.trim();
-  currentUser.street = document.getElementById("street").value.trim();
-  currentUser.city = document.getElementById("city").value.trim();
-  currentUser.zip = document.getElementById("zip").value.trim();
-
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  const index = users.findIndex((u) => u.email === currentUser.email);
-  if (index !== -1) users[index] = currentUser;
-
-  localStorage.setItem("users", JSON.stringify(users));
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
-  msg.textContent = "Daten erfolgreich gespeichert!";
-  msg.className = "account-message success";
-});
 
 // Passwort ändern
 const pwForm = document.getElementById("password-form");
