@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Login speichern
     localStorage.setItem("firstName", user.firstName);
     localStorage.setItem("role", user.role);
+    localStorage.setItem("currentUser", JSON.stringify(user));
 
     // Optional: Warenkorb für neuen User initialisieren
     if (!localStorage.getItem("cart"))
