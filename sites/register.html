@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/general.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Gast registrieren</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <main>
+      <section class="section-register">
+        <header>Als Gast registrieren</header>
+
+        <div class="register">
+          <form class="register-form" id="register-form">
+            <a class="btn-form-login" href="login.html">Zum Login</a>
+
+            <div class="input-box-registerguest">
+              <label for="firstName">Vorname</label>
+              <input type="text" id="firstName" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="lastName">Nachname</label>
+              <input type="text" id="lastName" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="street">Straße & Hausnummer</label>
+              <input type="text" id="street" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="zip">Postleitzahl</label>
+              <input type="text" id="zip" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="city">Ort</label>
+              <input type="text" id="city" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="email">E-Mail-Adresse</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="password">Passwort</label>
+              <input type="password" id="password" required />
+            </div>
+            <div class="input-box-registerguest">
+              <label for="passwordRepeat">Passwort wiederholen</label>
+              <input type="password" id="passwordRepeat" required />
+            </div>
+
+            <button class="btn-form" type="submit">Registrieren</button>
+            <p id="message" class="message"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Header/Footer laden -->
+    <script>
+      fetch("../includes/header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
+          const script = document.createElement("script");
+          script.src = "../includes/header.js";
+          document.body.appendChild(script);
+        });
+
+      fetch("../includes/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+    </script>
+
+    <!-- JS für Registration -->
+    <script src="../includes/register.js"></script>
+  </body>
+</html>

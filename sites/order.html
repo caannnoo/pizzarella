@@ -8,29 +8,33 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
+    <!-- Header laden -->
     <div id="header"></div>
 
     <main>
       <div class="pizza-list" id="pizza-list"></div>
     </main>
 
+    <!-- Footer laden -->
     <div id="footer"></div>
 
+    <!-- JS einbinden -->
     <script>
+      let pizzas = [];
       // === Header & Footer laden ===
       fetch("../includes/header.html")
         .then((res) => res.text())
         .then((data) => {
           document.getElementById("header").innerHTML = data;
 
-          // Header-Script anhängen (dort ist Cart-Counter)
+          // Header-Script anhängen (Cart-Counter)
           const script = document.createElement("script");
           script.src = "../includes/header.js";
           document.body.appendChild(script);
 
           // Warten, bis header.js geladen ist
           script.onload = () => {
-            // Jetzt können wir den Counter später updaten
+            // Jetzt die Pizzas laden
             loadPizzas();
           };
         });
@@ -39,6 +43,7 @@
         .then((res) => res.text())
         .then((data) => (document.getElementById("footer").innerHTML = data));
 
+      // === Pizzas laden ===
       function loadPizzas() {
         Promise.all([
           fetch("../data/pizzas.json").then((r) => r.json()),
@@ -58,85 +63,51 @@
           let sizeOptions = sizesArr
             .map(
               (s) =>
-                `<option value="${s.name}" data-price="${s.price}">${s.name} ${s.price > 0 ? "(+€" + s.price.toFixed(2) + ")" : ""}</option>`,
+                `<option value="${s.name}" data-price="${s.price}">${s.name} ${
+                  s.price > 0 ? "(+€" + s.price.toFixed(2) + ")" : ""
+                }</option>`,
             )
             .join("");
 
           let toppingOptions = toppingsArr
             .map(
               (t) =>
-                `<option value="${t.name}" data-price="${t.price}">${t.name} (+€${t.price.toFixed(2)})</option>`,
+                `<option value="${t.name}" data-price="${t.price}">${t.name} (+€${t.price.toFixed(
+                  2,
+                )})</option>`,
             )
             .join("");
 
           const pizzaHTML = `
-          <div class="pizza-card">
-            <img src="${pizza.img}" alt="${pizza.name}" class="pizza-img-order">
-            <h2>${pizza.name}</h2>
-            <p>${pizza.description}</p>
-            <p>Basispreis: €${pizza.base_price.toFixed(2)}</p>
-            <form class="pizza-order-form">
-              <input type="hidden" name="pizza_name" value="${pizza.name}">
-              <label>Größe:</label>
-              <select name="size">${sizeOptions}</select>
-              <label>Toppings:</label>
-              <select name="toppings[]" multiple>${toppingOptions}</select>
-              <label>Sonderwünsche:</label>
-              <textarea name="note" placeholder="Sonderwünsche..."></textarea>
-              <button type="submit">In den Warenkorb</button>
-            </form>
-          </div>
+            <div class="pizza-card">
+              <img src="${pizza.img}" alt="${pizza.name}" class="pizza-img-order">
+              <h2>${pizza.name}</h2>
+              <p>${pizza.description}</p>
+              <p>Basispreis: €${pizza.base_price.toFixed(2)}</p>
+              <form class="pizza-order-form">
+                <input type="hidden" name="pizza_name" value="${pizza.name}">
+                <label>Größe:</label>
+                <select name="size">${sizeOptions}</select>
+                <label>Toppings:</label>
+                <select name="toppings[]" multiple>${toppingOptions}</select>
+                <label>Sonderwünsche:</label>
+                <textarea name="note" placeholder="Sonderwünsche..."></textarea>
+                <button type="submit">In den Warenkorb</button>
+              </form>
+            </div>
           `;
+
           pizzaList.innerHTML += pizzaHTML;
         });
 
-        // EventListener für Add-to-Cart
-        document.querySelectorAll(".pizza-order-form").forEach((form) => {
-          form.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const fd = new FormData(form);
-            const pizzaName = fd.get("pizza_name");
-            const size = fd.get("size");
-            const toppings = fd.getAll("toppings[]");
-            const note = fd.get("note") || "";
-
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            // Prüfen, ob Pizza schon im Warenkorb
-            let found = cart.find(
-              (item) =>
-                item.pizza_name === pizzaName &&
-                item.size_name === size &&
-                JSON.stringify(item.toppings) === JSON.stringify(toppings) &&
-                item.note === note,
-            );
-
-            if (found) {
-              found.quantity += 1;
-            } else {
-              cart.push({
-                pizza_name: pizzaName,
-                size_name: size,
-                toppings,
-                note,
-                quantity: 1,
-                img: pizza.img,
-              });
-            }
-
-            localStorage.setItem("cart", JSON.stringify(cart));
-
-            // Counter in header.js aktualisieren
-            if (typeof updateCartCounter === "function") {
-              updateCartCounter();
-            }
-
-            // Meldung
-            alert(`${pizzaName} (${size}) wurde in den Warenkorb gelegt!`);
-          });
-        });
+        // Add-to-Cart initialisieren (aus add_to_cart.js)
+        if (typeof initAddToCart === "function") {
+          initAddToCart();
+        }
       }
     </script>
+
+    <!-- Add-to-Cart Script -->
+    <script src="../includes/add_to_cart.js"></script>
   </body>
 </html>

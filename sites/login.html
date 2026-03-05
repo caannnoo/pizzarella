@@ -1,108 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/general.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <title>Pizzarella - Login</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/general.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Pizzarella - Login</title>
+  </head>
+  <body>
+    <!-- Header laden -->
+    <div id="header"></div>
 
-<div id="header"></div>
+    <main>
+      <section class="section-login">
+        <header>Login</header>
 
-<main>
-  <section class="section-login">
-    <header>Login</header>
+        <div class="login">
+          <!-- Hier erscheinen Fehlermeldungen -->
+          <p class="needlogin-msg" id="login-msg"></p>
 
-    <div class="login">
+          <!-- Login Formular -->
+          <form class="login-form" id="login-form">
+            <div class="input-box-login">
+              <label for="email">E-Mail-Adresse</label>
+              <input type="email" id="email" required />
+            </div>
 
-      <p class="needlogin-msg" id="login-msg"></p>
+            <div class="input-box-login">
+              <label for="password">Passwort</label>
+              <input type="password" id="password" required />
+            </div>
 
-      <form class="login-form" id="login-form">
+            <button class="btn-form" type="submit">Anmelden</button>
 
-        <div class="input-box-login">
-          <label for="email">E-Mail-Adresse</label>
-          <input type="email" id="email" required />
+            <p>Noch kein Konto?</p>
+            <a class="btn-form" href="register.html">Als Gast registrieren</a>
+            <a class="btn-form" href="register_admin.html"
+              >Als Admin registrieren</a
+            >
+          </form>
         </div>
+      </section>
+    </main>
 
-        <div class="input-box-login">
-          <label for="password">Passwort</label>
-          <input type="password" id="password" required />
-        </div>
+    <!-- Footer laden -->
+    <div id="footer"></div>
 
-        <button class="btn-form" type="submit">Anmelden</button>
+    <!-- JS einbinden -->
+    <script src="../includes/login.js"></script>
+    <script>
+      // === HEADER laden ===
+      fetch("../includes/header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
 
-        <p>Noch kein Konto?</p>
-        <a class="btn-form" href="register.html">Als Gast registrieren</a>
-        <a class="btn-form" href="register_admin.html">Als Admin registrieren</a>
+          // Header.js nach dem Einfügen ausführen
+          const script = document.createElement("script");
+          script.src = "../includes/header.js";
+          document.body.appendChild(script);
+        });
 
-      </form>
-    </div>
-  </section>
-</main>
-
-<div id="footer"></div>
-
-<script>
-/* ===== Header laden ===== */
-fetch("../includes/header.html")
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById("header").innerHTML = data;
-
-    const script = document.createElement("script");
-    script.src = "../includes/header.js";
-    document.body.appendChild(script);
-  });
-
-/* ===== Footer laden ===== */
-fetch("../includes/footer.html")
-  .then(res => res.text())
-  .then(data => document.getElementById("footer").innerHTML = data);
-
-
-/* ===== Login Logik ===== */
-document.getElementById("login-form").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  const message = document.getElementById("login-msg");
-
-  if (!email || !password) {
-    message.textContent = "Bitte E-Mail und Passwort eingeben.";
-    return;
-  }
-
-  // Benutzer aus LocalStorage laden
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-
-  const user = users.find(u => u.email === email);
-
-  if (!user) {
-    message.textContent = "Benutzer nicht gefunden!";
-    return;
-  }
-
-  if (user.password !== password) {
-    message.textContent = "Falsches Passwort!";
-    return;
-  }
-
-  // Login speichern
-  localStorage.setItem("firstName", user.firstName);
-  localStorage.setItem("role", user.role);
-
-  // Weiterleitung
-  if (user.role === "admin") {
-    window.location.href = "orders.html";
-  } else {
-    window.location.href = "../index.html";
-  }
-});
-</script>
-
-</body>
+      // === FOOTER laden ===
+      fetch("../includes/footer.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("footer").innerHTML = data;
+        });
+    </script>
+  </body>
 </html>
