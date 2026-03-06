@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentUser = JSON.parse(localStorage.getItem("currentUser"));
   let orderContent = document.getElementById("order-content");
 
+  console.log("CURRENT USER:", currentUser);
+
   if (!currentUser) {
     orderContent.innerHTML = "<p>Bitte zuerst einloggen.</p>";
     return;
@@ -13,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // Gesamtpreis berechnen
   let totalPrice = 0;
-
   cart.forEach((item) => {
     totalPrice += item.unit_price * item.quantity;
   });
@@ -24,81 +26,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let newOrder = {
     id: Date.now(),
-    user: currentUser,
+    userEmail: currentUser.email,
+    firstName: currentUser.firstName || "Unbekannt",
+    lastName: currentUser.lastName || "",
     items: cart,
     total: totalPrice,
     date: new Date().toLocaleString(),
   };
 
   orders.push(newOrder);
-
   localStorage.setItem("orders", JSON.stringify(orders));
 
   // HTML erstellen
   let tableHTML = `
-<table class="cart-table">
-
-<thead>
-<tr>
-<th>Bild</th>
-<th>Pizza</th>
-<th>Größe</th>
-<th>Toppings</th>
-<th>Sonderwünsche</th>
-<th>Menge</th>
-<th>Preis</th>
-</tr>
-</thead>
-
-<tbody>
-`;
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Bild</th>
+          <th>Pizza</th>
+          <th>Größe</th>
+          <th>Toppings</th>
+          <th>Sonderwünsche</th>
+          <th>Menge</th>
+          <th>Preis</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
 
   cart.forEach((item) => {
     let lineTotal = item.unit_price * item.quantity;
-
     tableHTML += `
-<tr>
-
-<td>
-<img src="${item.img}" width="80">
-</td>
-
-<td>${item.pizza_name}</td>
-
-<td>${item.size_name}</td>
-
-<td>${item.toppings.join(", ")}</td>
-
-<td>${item.note}</td>
-
-<td>${item.quantity}</td>
-
-<td>€${lineTotal.toFixed(2)}</td>
-
-</tr>
-`;
+      <tr>
+        <td><img src="${item.img}" width="80" alt="${item.pizza_name}"></td>
+        <td>${item.pizza_name}</td>
+        <td>${item.size_name}</td>
+        <td>${item.toppings.join(", ")}</td>
+        <td>${item.note}</td>
+        <td>${item.quantity}</td>
+        <td>€${lineTotal.toFixed(2)}</td>
+      </tr>
+    `;
   });
 
   tableHTML += `
-</tbody>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6" style="text-align:right;font-weight:bold;">Gesamt:</td>
+          <td>€${totalPrice.toFixed(2)}</td>
+        </tr>
+      </tfoot>
+    </table>
 
-<tfoot>
-<tr>
-<td colspan="6" style="text-align:right;font-weight:bold;">Gesamt:</td>
-<td>€${totalPrice.toFixed(2)}</td>
-</tr>
-</tfoot>
-
-</table>
-
-<h2>Lieferadresse</h2>
-
-<p>
-<strong>Name:</strong> ${currentUser.firstName} ${currentUser.lastName}<br>
-<strong>Straße:</strong> ${currentUser.street}<br>
-<strong>PLZ & Ort:</strong> ${currentUser.zip} ${currentUser.city}
-</p>
-`;
+    <h2>Lieferadresse</h2>
+    <p>
+      <strong>Name:</strong> ${currentUser.firstName} ${currentUser.lastName}<br>
+      <strong>Straße:</strong> ${currentUser.street}<br>
+      <strong>PLZ & Ort:</strong> ${currentUser.zip} ${currentUser.city}
+    </p>
+  `;
 
   orderContent.innerHTML = tableHTML;
 
@@ -106,7 +93,5 @@ document.addEventListener("DOMContentLoaded", () => {
   localStorage.removeItem("cart");
 
   // Counter im Header aktualisieren
-  if (typeof updateCartCounter === "function") {
-    updateCartCounter();
-  }
+  if (typeof updateCartCounter === "function") updateCartCounter();
 });

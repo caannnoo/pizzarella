@@ -976,7 +976,6 @@ table {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 9rem;
-  margin-top: 9rem;
 }
 
 .account-container h1 {
@@ -1140,6 +1139,12 @@ table {
   margin-bottom: 2.4rem;
   font-size: 1.2rem;
   font-weight: 700;
+}
+
+.heading-orders {
+  text-align: center;
+  color: #fda61f;
+  font-weight: bold;
 }
 
 /* ADMIN ORDERS PAGE */

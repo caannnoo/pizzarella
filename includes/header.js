@@ -33,6 +33,7 @@ function initHeader() {
 
     if (firstName) {
       navHTML += `
+      
         <li><a class="nav-link" href="/sites/account.html">Mein Konto</a></li>
         <li><span class="greeting">Hallo, ${firstName} 👋</span></li>
         <li><a class="nav-link" href="/sites/logout.html">Logout</a></li>

@@ -81,6 +81,8 @@ document.getElementById("place-order").addEventListener("click", () => {
   const newOrder = {
     id: Date.now(),
     userEmail: currentUser.email,
+    firstName: currentUser.firstName,
+    lastName: currentUser.lastName,
     items: cart,
     total: total,
     date: new Date().toLocaleString(),
@@ -94,5 +96,5 @@ document.getElementById("place-order").addEventListener("click", () => {
 
   alert("Bestellung erfolgreich!");
 
-  window.location.href = "../index.html";
+  window.location.href = "order_complete.html";
 });

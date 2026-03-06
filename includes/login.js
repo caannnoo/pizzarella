@@ -31,6 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Login speichern
+    const role = user.role || "guest"; // default "guest", falls Role fehlt
+    user.role = role; // sicherstellen, dass user-Objekt die Role hat
+
     localStorage.setItem("firstName", user.firstName);
     localStorage.setItem("role", user.role);
     localStorage.setItem("currentUser", JSON.stringify(user));

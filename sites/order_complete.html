@@ -21,6 +21,8 @@
     <script src="../includes/order_complete.js"></script>
 
     <script>
+      let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      console.log("CURRENT USER:", currentUser);
       fetch("../includes/header.html")
         .then((res) => res.text())
         .then((data) => {

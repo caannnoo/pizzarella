@@ -53,9 +53,9 @@
         ordersList.innerHTML = "<p>Keine Bestellungen vorhanden.</p>";
       } else {
         orders.reverse().forEach((order, index) => {
-          const user = users.find((u) => u.email === order.userEmail) || {
-            firstName: "Unbekannt",
-            lastName: "",
+          const user = {
+            firstName: order.firstName || "Unbekannt",
+            lastName: order.lastName || "",
             email: order.userEmail,
           };
 
@@ -75,9 +75,9 @@
 
           const orderHTML = `
         <div class="order-block">
-          <h2>Bestellung #${index + 1}</h2>
-          <p><strong>Kunde:</strong> ${user.firstName} ${user.lastName}</p>
-          <p><strong>E-Mail:</strong> ${user.email}</p>
+          <h2>Bestellung #${orders.length - index}</h2>
+          <p><strong>Kunde:</strong> ${order.firstName || "Unbekannt"} ${order.lastName || ""}</p>
+          <p><strong>E-Mail:</strong> ${order.userEmail}</p>
           <p><strong>Gesamtpreis:</strong> ${order.items.reduce((sum, i) => sum + i.unit_price * i.quantity, 0).toFixed(2)} €</p>
           
           <table>
